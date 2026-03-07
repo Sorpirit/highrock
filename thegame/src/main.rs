@@ -1,6 +1,5 @@
-use highrock_engine::add;
+use highrock_engine::setup;
 
 fn main() {
-    println!("Hello, world! {}", add(12, 21));
-    
+    setup();
 }
