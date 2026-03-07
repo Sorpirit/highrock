@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "highrock_engine",
+    "thegame",
+]
+resolver = "2"

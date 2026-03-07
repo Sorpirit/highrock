@@ -1,0 +1,7 @@
+[package]
+name = "thegame"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+highrock_engine = { path = "../highrock_engine"}
