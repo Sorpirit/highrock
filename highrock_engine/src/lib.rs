@@ -1,5 +1,7 @@
 pub mod renderer;
 pub mod gui;
+pub mod texture_loader;
+pub mod camera;
 
 use std::sync::Arc;
 
@@ -7,6 +9,7 @@ use env_logger::Env;
 use winit::application::ApplicationHandler;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::event::{ElementState, MouseButton, WindowEvent};
+use winit::keyboard::KeyCode;
 use winit::window::{Window, WindowAttributes, WindowId};
 
 use crate::renderer::{Renderer, RendererConfig};
@@ -39,6 +42,8 @@ fn init_window(event_loop: &ActiveEventLoop, config: &WindowConfig) -> Window {
     let window_attributes = WindowAttributes::default()
                 .with_title(config.titel.to_string())
                 .with_resizable(false)
+                .with_maximized(true)
+                // .with_fullscreen(Some(true))
                 .with_inner_size(winit::dpi::LogicalSize::new(config.width, config.height));
 
     event_loop.create_window(window_attributes).expect("Failed to initialize window")
@@ -73,7 +78,7 @@ impl ApplicationHandler for EngineRunner {
             return;
         };
 
-        let _consumed = engine.renderer.gui.handle_event(&event);
+        let consumed = engine.renderer.gui.handle_event(&event);
 
         match event {
             WindowEvent::CloseRequested => {
@@ -84,6 +89,12 @@ impl ApplicationHandler for EngineRunner {
             WindowEvent::Resized(new_size) => {
                 log::info!("Resized: {}:{}", new_size.width, new_size.height);
                 engine.renderer.resize(new_size);
+            }
+
+            WindowEvent::KeyboardInput { event, .. } if !consumed => {
+                if event.physical_key == KeyCode::Escape && event.state.is_pressed() {
+                    event_loop.exit();
+                }
             }
 
             // WindowEvent::RedrawRequested => {

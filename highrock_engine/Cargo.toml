@@ -3,6 +3,9 @@ name = "highrock_engine"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
 wgpu = { version = "27.0", features = ["webgl", "webgpu", "vulkan", "dx12"] }
 winit = "0.30"
@@ -13,3 +16,7 @@ pollster = "0.4"
 egui        = "0.33"
 egui-wgpu   = "0.33"
 egui-winit  = "0.33"
+
+glam = { version = "0.32", features = ["bytemuck"] }
+bytemuck = { version = "1", features = ["derive"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
