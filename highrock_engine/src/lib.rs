@@ -123,9 +123,11 @@ impl ApplicationHandler for EngineRunner {
 
         engine.renderer.gui.begin_frame();
 
-        egui::Window::new("Props").show(engine.renderer.gui.get_gui_context(), |ui| {
-            ui.label("Some props");
-        });
+        egui::Window::new("Props")
+            .resizable(egui::emath::Vec2b::TRUE)
+            .show(engine.renderer.gui.get_gui_context(), |ui| {
+                ui.label("Some props");
+            });
 
         engine.renderer.render();
         // engine.window.request_redraw();
