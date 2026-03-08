@@ -12,14 +12,14 @@ pub struct Camera {
 
 impl Camera {
     pub fn look_at(from: Vec3, to: Vec3) -> Self {
-        Self { 
-            position: from, 
-            forward: Vec3::normalize_or(to - from, Vec3::Z), 
-            up: Vec3::Y, 
+        Self {
+            position: from,
+            forward: Vec3::normalize_or(to - from, Vec3::Z),
+            up: Vec3::Y,
             aspect: 16.0 / 9.0,
-            fovy: 45.0, 
-            znear: 0.05, 
-            zfar: 1000.0
+            fovy: 45.0,
+            znear: 0.05,
+            zfar: 1000.0,
         }
     }
 

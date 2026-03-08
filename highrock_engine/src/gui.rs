@@ -33,7 +33,7 @@ impl Gui {
         let renderer = egui_wgpu::Renderer::new(
             device,
             surface_format,
-            egui_wgpu::RendererOptions::PREDICTABLE
+            egui_wgpu::RendererOptions::PREDICTABLE,
         );
 
         Self {
@@ -46,10 +46,7 @@ impl Gui {
         }
     }
 
-    pub fn handle_event(
-        &mut self,
-        event: &winit::event::WindowEvent,
-    ) -> bool {
+    pub fn handle_event(&mut self, event: &winit::event::WindowEvent) -> bool {
         self.state.on_window_event(&self.window, event).consumed
     }
 
@@ -59,7 +56,7 @@ impl Gui {
         self.ctx.begin_pass(raw_input);
     }
 
-    pub fn get_gui_context(&self) -> &egui::Context  {
+    pub fn get_gui_context(&self) -> &egui::Context {
         assert!(self.is_drawing_gui);
         &self.ctx
     }
@@ -96,21 +93,23 @@ impl Gui {
             .update_buffers(device, queue, encoder, &paint_jobs, &screen_descriptor);
 
         {
-            let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: Some("Gui"),
-                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view,
-                    resolve_target: None,
-                    ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Load,
-                        store: wgpu::StoreOp::Store,
-                    },
-                    depth_slice: None,
-                })],
-                depth_stencil_attachment: None,
-                timestamp_writes: None,
-                occlusion_query_set: None,
-            }).forget_lifetime();
+            let mut render_pass = encoder
+                .begin_render_pass(&wgpu::RenderPassDescriptor {
+                    label: Some("Gui"),
+                    color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                        view,
+                        resolve_target: None,
+                        ops: wgpu::Operations {
+                            load: wgpu::LoadOp::Load,
+                            store: wgpu::StoreOp::Store,
+                        },
+                        depth_slice: None,
+                    })],
+                    depth_stencil_attachment: None,
+                    timestamp_writes: None,
+                    occlusion_query_set: None,
+                })
+                .forget_lifetime();
 
             self.renderer
                 .render(&mut render_pass, &paint_jobs, &screen_descriptor);

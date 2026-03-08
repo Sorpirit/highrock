@@ -1,14 +1,14 @@
-pub mod renderer;
-pub mod gui;
-pub mod texture_loader;
 pub mod camera;
+pub mod gui;
+pub mod renderer;
+pub mod texture_loader;
 
 use std::sync::Arc;
 
 use env_logger::Env;
 use winit::application::ApplicationHandler;
-use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::event::{ElementState, MouseButton, WindowEvent};
+use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::keyboard::KeyCode;
 use winit::window::{Window, WindowAttributes, WindowId};
 
@@ -22,36 +22,46 @@ pub struct WindowConfig {
 
 impl Default for WindowConfig {
     fn default() -> Self {
-        Self { titel: "Highrock".to_string(), width: 1920, height: 1080 }
+        Self {
+            titel: "Highrock".to_string(),
+            width: 1920,
+            height: 1080,
+        }
     }
 }
 
 struct Engine {
     window: Arc<Window>,
-    renderer: Renderer
+    renderer: Renderer,
 }
 
 struct EngineRunner {
     wconfig: WindowConfig,
     rconfig: RendererConfig,
-    
+
     engine: Option<Engine>,
 }
 
 fn init_window(event_loop: &ActiveEventLoop, config: &WindowConfig) -> Window {
     let window_attributes = WindowAttributes::default()
-                .with_title(config.titel.to_string())
-                .with_resizable(false)
-                .with_maximized(true)
-                // .with_fullscreen(Some(true))
-                .with_inner_size(winit::dpi::LogicalSize::new(config.width, config.height));
+        .with_title(config.titel.to_string())
+        .with_resizable(false)
+        .with_maximized(true)
+        // .with_fullscreen(Some(true))
+        .with_inner_size(winit::dpi::LogicalSize::new(config.width, config.height));
 
-    event_loop.create_window(window_attributes).expect("Failed to initialize window")
+    event_loop
+        .create_window(window_attributes)
+        .expect("Failed to initialize window")
 }
 
 impl EngineRunner {
     fn new() -> Self {
-        Self { wconfig: Default::default(), rconfig: Default::default(), engine: None }
+        Self {
+            wconfig: Default::default(),
+            rconfig: Default::default(),
+            engine: None,
+        }
     }
 }
 
@@ -64,7 +74,7 @@ impl ApplicationHandler for EngineRunner {
         let window = init_window(event_loop, &self.wconfig);
         let window = Arc::new(window);
         let renderer = pollster::block_on(Renderer::new(window.clone(), self.rconfig.clone()));
-        
+
         self.engine = Some(Engine { window, renderer });
     }
 
@@ -113,16 +123,14 @@ impl ApplicationHandler for EngineRunner {
 
         engine.renderer.gui.begin_frame();
 
-        egui::Window::new("Props")
-                .show(engine.renderer.gui.get_gui_context(), |ui| {
-                    ui.label("Some props");
-                });
+        egui::Window::new("Props").show(engine.renderer.gui.get_gui_context(), |ui| {
+            ui.label("Some props");
+        });
 
         engine.renderer.render();
         // engine.window.request_redraw();
     }
 }
-
 
 pub fn setup() {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();

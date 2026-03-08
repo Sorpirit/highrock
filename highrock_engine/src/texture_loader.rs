@@ -1,5 +1,1 @@
-
-pub fn load_default()
-{
-    
-}
+pub fn load_default() {}
