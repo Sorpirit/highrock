@@ -3,5 +3,40 @@ name = "thegame"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "thegame-x64"
+path = "src/native.rs"
+
 [dependencies]
 highrock_engine = { path = "../highrock_engine" }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = [
+    "Document",
+    "Window",
+    "Element",
+    "HtmlCanvasElement",
+    "Performance",
+    "Headers",
+    "Request",
+    "RequestInit",
+    "Response",
+    "Location",
+    # Audio API
+    "AudioContext",
+    "AudioBuffer",
+    "AudioBufferSourceNode",
+    "AudioDestinationNode",
+    "AudioNode",
+    "AudioParam",
+    "GainNode",
+] }
+console_error_panic_hook = "0.1"
+console_log = "1.0"
+getrandom = { version = "0.3", features = ["wasm_js"] }

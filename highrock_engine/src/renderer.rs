@@ -507,12 +507,15 @@ impl Renderer {
         {
             return;
         }
+
         assert_ne!(new_size.width, 0);
         assert_ne!(new_size.height, 0);
 
         self.surface_config.width = new_size.width;
         self.surface_config.height = new_size.height;
         self.surface.configure(&self.device, &self.surface_config);
+
+        self.camera.aspect = self.surface_config.width as f32 / self.surface_config.height as f32;
 
         let (
             framebuffer_color,
@@ -559,7 +562,6 @@ impl Renderer {
             }
         };
 
-        self.camera.position.z -= 0.001;
         let (view, proj) = self.camera.compute_view_projection();
         self.queue
             .write_buffer(&self.camera_buffer, 0, bytemuck::cast_slice(&[view, proj]));
@@ -648,26 +650,6 @@ impl Renderer {
             render_pass.set_bind_group(1, &framebuffer_bind_group, &[]);
             render_pass.draw(0..3, 0..1);
         }
-
-        // encoder.copy_texture_to_texture(
-        //     wgpu::TexelCopyTextureInfo {
-        //         texture: &self.framebuffer_color,
-        //         mip_level: 0,
-        //         origin: wgpu::Origin3d::ZERO,
-        //         aspect: wgpu::TextureAspect::All,
-        //     },
-        //     wgpu::TexelCopyTextureInfo {
-        //         texture: &self.ldr_texture,
-        //         mip_level: 0,
-        //         origin: wgpu::Origin3d::ZERO,
-        //         aspect: wgpu::TextureAspect::All,
-        //     },
-        //     wgpu::Extent3d {
-        //         width: self.surface_config.width,
-        //         height: self.surface_config.height,
-        //         depth_or_array_layers: 1,
-        //     },
-        // );
 
         {
             self.gui

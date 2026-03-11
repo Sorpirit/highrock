@@ -1,0 +1,16 @@
+[build]
+target = "index.html"
+release = false
+dist = "dist"
+filehash = false
+inject_scripts = false
+offline = false
+
+[serve]
+addresses = ["127.0.0.1"]
+port = 8080
+open = true
+
+# [watch]
+# # Rebuild on any Rust source change
+# ignore = ["dist", "target"]
